@@ -1,9 +1,10 @@
 from simpleimage import SimpleImage
 from karel.stanfordkarel import *
 import math
+import time
 
 IMAGE_PATH = "images/"
-DEFAULT_FILE = "baby_koi.JPG"
+DEFAULT_FILE = "kayaking_doggo.JPG"
 CANVAS_SIZE = 40
 COLOR_CHART = {
     "BLACK": (0, 0, 0),
@@ -24,10 +25,11 @@ COLOR_CHART = {
 
 def main():
     image = SimpleImage(get_file())
-    image = crop_image(image)
-    image.show()
-    colors = get_colors(image)
+    cropped_image = crop_image(image)
+    colors = get_colors(cropped_image)
     draw_on_cavas(colors)
+    time.sleep(5)
+    image.show()
 
 
 def get_file():
@@ -47,8 +49,8 @@ def crop_image(image):
     new_image = SimpleImage.blank(size, size)
     for y in range(size):
         for x in range(size):
-            px = image.get_pixel(x+round((width-size)/2),
-                                 y+round((height-size)/2))
+            px = image.get_pixel(x+(width-size)//2,
+                                 y+(height-size)//2)
             new_image.set_pixel(x, y, px)
     return new_image
 
@@ -63,21 +65,12 @@ def get_colors(img):
     return colors
 
 
-def test():
-    img = SimpleImage(DEFAULT_FILE)
-    px = img.get_pixel(450, 300)
-    color = convert(px)
-    print(color)
-
-
 def convert(px):
-    min_distance = float("inf")
+    min_distance = 765
     closest_color = ""
     for color, values in COLOR_CHART.items():
-        # distance = math.sqrt((values[0]-px.red)**2 +
-        #                      (values[1]-px.green)**2+(values[2]-px.blue)**2)
-        distance = abs(
-            values[0]-px.red)+abs(values[1]-px.green)+abs(values[2]-px.blue)
+        distance = math.sqrt((values[0]-px.red)**2 +
+                             (values[1]-px.green)**2+(values[2]-px.blue)**2)
         if distance < min_distance:
             min_distance = distance
             closest_color = color
@@ -148,8 +141,6 @@ def move_to_wall():
     while front_is_clear():
         move()
 
-
-# main()
 
 if __name__ == "__main__":
     run_karel_program('canvas.w')
