@@ -1,4 +1,4 @@
-from simpleimage import SimpleImage
+from simpleimage.simpleimage import SimpleImage
 from karel.stanfordkarel import *
 import math
 import time
